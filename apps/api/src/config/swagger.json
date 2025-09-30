@@ -1,0 +1,314 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Movies & TV Shows API",
+    "version": "1.0.0",
+    "description": "API documentation for the Movies & TV Shows REST API"
+  },
+  "servers": [
+    { "url": "http://localhost:3000", "description": "Local server" }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "JWT Bearer token authentication"
+      }
+    },
+    "schemas": {
+      "Movie": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer" },
+          "title": { "type": "string" },
+          "genre": { "type": "string" },
+          "year": { "type": "integer" },
+          "director": { 
+            "type": "object",
+            "properties": {
+              "id": { "type": "integer" },
+              "name": { "type": "string" }
+            }
+          },
+          "actors": {
+            "type": "array",
+            "items": { 
+              "type": "object",
+              "properties": {
+                "id": { "type": "integer" },
+                "name": { "type": "string" }
+              }
+            }
+          }
+        }
+      },
+      "EpisodeDetail": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer" },
+          "title": { "type": "string" },
+          "episodeNumber": { "type": "integer" },
+          "season": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "integer" },
+              "seasonNumber": { "type": "integer" },
+              "show": {
+                "type": "object",
+                "properties": {
+                  "id": { "type": "integer" },
+                  "title": { "type": "string" }
+                }
+              }
+            }
+          },
+          "director": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "integer" },
+              "name": { "type": "string" }
+            }
+          }
+        }
+      },
+      "AuthResponse": {
+        "type": "object",
+        "properties": {
+          "token": { "type": "string" },
+          "refreshToken": { "type": "string" }
+        }
+      },
+      "ApiResponse": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean" },
+          "message": { "type": "string" },
+          "data": {}
+        }
+      }
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/auth/login": {
+      "post": {
+        "summary": "User login with fixed credentials",
+        "description": "Logs in a user and returns a JWT access token and refresh token.",
+        "security": [], 
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { 
+                "type": "object",
+                "properties": {
+                  "username": { "type": "string" },
+                  "password": { "type": "string" }
+                },
+                "required": ["username", "password"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login successful",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ApiResponse" },
+                "example": {
+                  "success": true,
+                  "message": "Logged in successfully",
+                  "data": {
+                    "token": "<JWT_ACCESS_TOKEN>",
+                    "refreshToken": "<JWT_REFRESH_TOKEN>"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials"
+          }
+        }
+      }
+    },
+    "/auth/refresh": {
+      "post": {
+        "summary": "Refresh JWT access token",
+        "description": "Provides a new JWT access token given a valid refresh token.",
+        "security": [], 
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { 
+                "type": "object",
+                "properties": { "refreshToken": { "type": "string" } },
+                "required": ["refreshToken"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "New token generated",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ApiResponse" },
+                "example": {
+                  "success": true,
+                  "message": "Token refreshed successfully",
+                  "data": {
+                    "token": "<NEW_JWT_ACCESS_TOKEN>"
+                  }
+                }
+              }
+            }
+          },
+          "401": { "description": "Invalid or expired refresh token" }
+        }
+      }
+    },
+    "/movies": {
+      "get": {
+        "summary": "Get all movies (with optional filter and sort)",
+        "description": "Retrieves a list of movies. Supports filtering by genre and sorting by a field (e.g. title or year).",
+        "parameters": [
+          {
+            "name": "genre",
+            "in": "query",
+            "description": "Filter movies by genre",
+            "required": false,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort movies by a field (e.g. 'title' or 'year')",
+            "required": false,
+            "schema": { "type": "string", "enum": ["title", "year"] }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of movies retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ApiResponse" },
+                "example": {
+                  "success": true,
+                  "message": "Movies retrieved successfully",
+                  "data": [
+                    {
+                      "id": 1,
+                      "title": "Example Movie",
+                      "genre": "Action",
+                      "year": 2021,
+                      "director": { "id": 5, "name": "Director Name" },
+                      "actors": [
+                        { "id": 10, "name": "Actor One" },
+                        { "id": 11, "name": "Actor Two" }
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Add a new movie",
+        "description": "Creates a new movie record. Requires a title, genre, and director, with optional actors.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { 
+                "type": "object",
+                "properties": {
+                  "title": { "type": "string" },
+                  "genre": { "type": "string" },
+                  "year":  { "type": "integer" },
+                  "directorId": { "type": "integer" },
+                  "actorIds": { 
+                    "type": "array",
+                    "items": { "type": "integer" }
+                  }
+                },
+                "required": ["title", "genre", "directorId"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Movie created successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ApiResponse" }
+              }
+            }
+          },
+          "400": { "description": "Bad request (missing or invalid data)" },
+          "404": { "description": "Director or Actors not found" }
+        }
+      }
+    },
+    "/tvshows/{id}/episodes/{episodeId}": {
+      "get": {
+        "summary": "Get details of a specific TV show episode (with director info)",
+        "description": "Retrieves information for a specific episode of a TV show, including its director.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the TV show",
+            "required": true,
+            "schema": { "type": "integer" }
+          },
+          {
+            "name": "episodeId",
+            "in": "path",
+            "description": "ID of the episode",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Episode details retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ApiResponse" },
+                "example": {
+                  "success": true,
+                  "message": "Episode retrieved successfully",
+                  "data": {
+                    "id": 42,
+                    "title": "Episode Title",
+                    "episodeNumber": 5,
+                    "season": {
+                      "id": 7,
+                      "seasonNumber": 2,
+                      "show": { "id": 3, "title": "Show Name" }
+                    },
+                    "director": { "id": 9, "name": "Director Name" }
+                  }
+                }
+              }
+            }
+          },
+          "404": { "description": "Episode or TV show not found (or mismatch)" }
+        }
+      }
+    }
+  }
+}
