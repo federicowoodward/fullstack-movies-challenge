@@ -22,7 +22,7 @@ export default function NewMoviePage() {
     formState: { errors },
     reset,
   } = useForm<MovieFormValues>({
-    resolver: zodResolver(movieSchema),
+    resolver: zodResolver(movieSchema as any),
     defaultValues: {
       title: "",
       genre: "",

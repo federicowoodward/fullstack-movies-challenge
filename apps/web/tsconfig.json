@@ -40,7 +40,7 @@
     "**/*.tsx",
     "**/*.d.ts",
     ".next/types/**/*.ts"
-  ],
+, ".next/types/app/(app)/movies/MoviesClient.tsx"  ],
   "exclude": [
     "node_modules"
   ]

@@ -35,7 +35,7 @@ function EpisodeDetails({ episode }: { episode: EpisodeDetail }) {
         <p className="text-sm uppercase tracking-wide text-slate-500">Episode</p>
         <h1 className="mt-1 text-2xl font-semibold text-slate-900">{episode.title}</h1>
         <p className="mt-2 text-sm text-slate-600">
-          Episode {episode.episodeNumber} · Season {episode.season.seasonNumber} · {episode.season.show.title}
+          Episode {episode.episodeNumber} ï¿½ Season {episode.season.seasonNumber} - {episode.season.show.title}
         </p>
       </div>
 

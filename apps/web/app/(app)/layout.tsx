@@ -16,7 +16,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           </Link>
           <nav className="flex items-center gap-4 text-sm font-medium text-slate-600">
             {navLinks.map((link) => (
-              <Link key={link.href} href={link.href} className="hover:text-primary">
+              <Link key={link.href} href={(link.href) as any} className="hover:text-primary">
                 {link.label}
               </Link>
             ))}

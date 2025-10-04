@@ -1,4 +1,12 @@
 {
   "/_not-found/page": "app/_not-found/page.js",
-  "/(app)/page": "app/(app)/page.js"
+  "/(public)/login/page": "app/(public)/login/page.js",
+  "/api/auth/login/route": "app/api/auth/login/route.js",
+  "/api/auth/refresh/route": "app/api/auth/refresh/route.js",
+  "/api/tvshows/[id]/episodes/[episodeId]/route": "app/api/tvshows/[id]/episodes/[episodeId]/route.js",
+  "/api/movies/route": "app/api/movies/route.js",
+  "/(app)/movies/page": "app/(app)/movies/page.js",
+  "/(app)/page": "app/(app)/page.js",
+  "/(app)/tvshows/[id]/episodes/[episodeId]/page": "app/(app)/tvshows/[id]/episodes/[episodeId]/page.js",
+  "/(app)/movies/new/page": "app/(app)/movies/new/page.js"
 }

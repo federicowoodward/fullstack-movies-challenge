@@ -30,11 +30,11 @@ declare namespace __next_route_internal_types__ {
 
   type StaticRoutes = 
     | `/login`
-    | `/api/movies`
     | `/api/auth/login`
     | `/api/auth/refresh`
-    | `/`
+    | `/api/movies`
     | `/movies`
+    | `/`
     | `/movies/new`
   type DynamicRoutes<T extends string = string> = 
     | `/api/tvshows/${SafeSlug<T>}/episodes/${SafeSlug<T>}`
