@@ -1,0 +1,13 @@
+{
+  "name": "@fs/omdb-to-csv",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "omdb:csv": "node index.js",
+    "omdb:csv:demo": "node index.js Batman,Inception,Blade Runner,Barbie,\"True Detective\",Mindhunter"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5"
+  }
+}
