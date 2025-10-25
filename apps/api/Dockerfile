@@ -22,4 +22,4 @@ ENV PORT=3001
 COPY --from=builder /app /app
 
 EXPOSE 3001
-CMD ["pnpm", "--filter", "@fs/api", "start"]
+CMD ["sh", "-c", "pnpm --filter @fs/api db:migration:run && pnpm --filter @fs/api start"]
