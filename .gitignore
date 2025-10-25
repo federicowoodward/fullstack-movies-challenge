@@ -4,4 +4,4 @@ dist
 .vscode/*
 !.vscode/extensions.json
 docker/postgres-data
-context.txt
+context.txtapps/scripts/omdb-to-csv/.env
